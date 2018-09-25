@@ -1,8 +1,5 @@
 package grafica;
 
-import controle.ControleCirculo;
-import controle.ControlePonto;
-import controle.ControleReta;
 import controle.ControleTela;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -23,23 +20,21 @@ public class Tela {
 	Button btnPonto = new Button(" . ");
 	Button btnReta = new Button(" / ");
 	Button btnCirculo = new Button(" O ");
+	Button btnRetangulo = new Button(" [] ");
 	Button btnLimparTela = new Button("Limpa Tela");
 	HBox hBoxBotoes = new HBox();
-	int vPixels = 600, hPixels = 1200;
-	Canvas canvas = new Canvas(hPixels, vPixels);
-
+	
 	ControleTela controleTela = new ControleTela();
-	ControlePonto controlePonto = new ControlePonto();
-	ControleReta controleReta = new ControleReta();
-	ControleCirculo controleCirculo = new ControleCirculo();
-
+	Definicao definicao = controleTela.getDefinicao();
+	Canvas canvas = new Canvas(definicao.getHPixels(), definicao.getVPixels());
+	
 	public Tela(Stage palco){
 		// define titulo da janela
 		palco.setTitle("Testa Mouse");
 
 		// define largura e altura da janela
-		palco.setWidth(hPixels);
-		palco.setHeight(vPixels);
+		palco.setWidth(definicao.getHPixels());
+		palco.setHeight(definicao.getVPixels());
 
 		// Painel para os componentes
 		BorderPane pane = new BorderPane();
@@ -53,9 +48,9 @@ public class Tela {
 		// Eventos de mouse
 		controleTela.mostrarCoordenadasMouse(canvas, palco);	
 		
-		pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
+		pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		pane.setCenter(canvas); // posiciona o componente de desenho
-		pane.setTop(adicionaBotoes(btnPonto, btnReta , btnCirculo, btnLimparTela));
+		pane.setTop(adicionaBotoes(btnPonto, btnReta , btnCirculo, btnRetangulo, btnLimparTela));
 		
 		// cria e insere cena
 		Scene scene = new Scene(pane);
@@ -71,14 +66,15 @@ public class Tela {
 		return this.gc;
 	}
 	
-	public HBox adicionaBotoes(Button btnPonto, Button btnReta , Button btnCirculo, Button btnLimparTela){
+	public HBox adicionaBotoes(Button btnPonto, Button btnReta , Button btnCirculo, Button btnRetangulo, Button btnLimparTela){
 		HBox hBoxBotoes = new HBox();
 		btnPonto = controleTela.clicarPonto(canvas,gc, btnPonto);
 		btnReta = controleTela.clicarReta(canvas,gc, btnReta);
 		btnCirculo = controleTela.clicarCirculo(canvas,gc, btnCirculo);
+		btnRetangulo =  controleTela.clicarRetangulo(canvas, gc, btnRetangulo);
 		btnLimparTela = controleTela.limparTela(gc, btnLimparTela );
 		
-		hBoxBotoes.getChildren().addAll(btnPonto, btnReta, btnCirculo, btnLimparTela);
+		hBoxBotoes.getChildren().addAll(btnPonto, btnReta, btnCirculo, btnRetangulo, btnLimparTela);
 		return hBoxBotoes;
 	}
 }

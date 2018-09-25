@@ -11,10 +11,8 @@ public class ControlePonto {
 	
 	public void desenharPonto(GraphicsContext g, int x, int y, int diametro, String nome, Color cor) {
 		PontoGr p; 
-
 		// Cria um ponto
 		p = new PontoGr(x, y, cor, nome, diametro);
-
 		// Desenha o ponto
 		p.desenharPonto(g);
 	}
@@ -36,15 +34,15 @@ public class ControlePonto {
 				// desenha ponto na posicao clicada
 				desenharPonto(gc, x, y, 1, "P"+ getIndicePonto(), Color.BLUE);
 				IncrementarIndicePonto();
-				
-				//verificar o primeiro clique para pegar as coordenadas do ponto
-			} else if (event.getButton() == MouseButton.SECONDARY) {
+			}else if (event.getButton() == MouseButton.SECONDARY) {
 				x = (int)event.getX();
 				y = (int)event.getY();
 				// desenha ponto na posicao clicada
 				desenharPonto(gc, x, y, 1, "("+ x + ", " + y +")", Color.RED);
+			
 			}
 		});
+		canvas.setOnMouseDragged(event -> { });
 	}
 	
 	public void setIndicePonto(int n){

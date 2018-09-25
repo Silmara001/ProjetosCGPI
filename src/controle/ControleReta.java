@@ -1,19 +1,28 @@
 package controle;
 
 import matematica.Reta;
-import grafica.RetaGr;
+import grafica.Definicao;
 import controle.ControlePonto;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 
 public class ControleReta {
-	int contClique = 0;
 	int indicePonto = 1;
+	int x1=0, y1=0, x2=0, y2=0;
+	int x=0, y=0, xant=0, yant=0;
+	
+	boolean primeiraVez = true;
+	boolean fimElastico = true;
 	
 	Reta retaMat = new Reta();
-	RetaGr retaGr = new RetaGr();
 	ControlePonto controlePonto = new ControlePonto();
+	Definicao definicao;
+	
+	public ControleReta(Definicao definicao){
+		this.definicao = definicao;
+	}
 	
 	public void desenharReta(GraphicsContext gc, int x1, int y1, int x2, int y2){
 		int  fx, fy, k;
@@ -24,12 +33,12 @@ public class ControleReta {
 			//Quando y1 > y2
 			if( retaMat.verificarY1MaiorY2(y1, y2) ){
 				for(k=y2; k<=y1; k++){
-					controlePonto.desenharPonto(gc, x1, k, retaGr.getEspessuraReta(), "", retaGr.getCorReta());
+					controlePonto.desenharPonto(gc, x1, k, definicao.getEspessura(), "", definicao.getCor());
 				}
 			}else {
 			//Quando y1 < y2
 				for(k=y1; k<=y2; k++){
-					controlePonto.desenharPonto(gc, x1, k, retaGr.getEspessuraReta(), "", retaGr.getCorReta());
+					controlePonto.desenharPonto(gc, x1, k, definicao.getEspessura(), "", definicao.getCor());
 				}
 			}
 		}
@@ -39,12 +48,12 @@ public class ControleReta {
 			//Quando x1 > x2
 			if( retaMat.verificarX1MaiorX2(x1, x2) ){
 				for(k=x2; k<=x1; k++){
-					controlePonto.desenharPonto(gc, k, y1, retaGr.getEspessuraReta(), "", retaGr.getCorReta());
+					controlePonto.desenharPonto(gc, k, y1, definicao.getEspessura(), "", definicao.getCor());
 				}
 			}else { 
 			//Quando x1 < x2
 				for(k=x1; k<=x2; k++){
-					controlePonto.desenharPonto(gc, k, y1, retaGr.getEspessuraReta(), "",  retaGr.getCorReta());
+					controlePonto.desenharPonto(gc, k, y1, definicao.getEspessura(), "",  definicao.getCor());
 				}
 			}
 		}
@@ -56,30 +65,30 @@ public class ControleReta {
 			//Quando intervalo de y é menor do que o do x, é preciso usar a função da reta em função de y
 			if ( retaMat.obterDistancia(x1, x2)  <  retaMat.obterDistancia(y1, y2) ) {
 				//Quando x1 > x2
-				if( retaMat.verificarY1MaiorY2(y1, y2) ){ //melhorar a função: esconder os argumentos
+				if( retaMat.verificarY1MaiorY2(y1, y2) ){ 
 					for(k=y2; k<=y1; k++){
 						fy = (int) retaMat.obterFy(k, a,  b);
-						controlePonto.desenharPonto(gc, fy, k, retaGr.getEspessuraReta(), "",retaGr.getCorReta());
+						controlePonto.desenharPonto(gc, fy, k, definicao.getEspessura(), "",definicao.getCor());
 					}
 				}else{
 					//Quando x1 < x2				
 					for(k=y1; k<=y2; k++){
 						fy = (int) retaMat.obterFy(k, a,  b);
-						controlePonto.desenharPonto(gc, fy, k, retaGr.getEspessuraReta(), "", retaGr.getCorReta());
+						controlePonto.desenharPonto(gc, fy, k, definicao.getEspessura(), "", definicao.getCor());
 					}
 				}
 			}else {
 				//Quando x1 > x2
-				if( retaMat.verificarX1MaiorX2(x1, x2) ){ //melhorar a função: esconder os argumentos
+				if( retaMat.verificarX1MaiorX2(x1, x2) ){
 					for(k=x2; k<=x1; k++){
 						fx = (int) retaMat.obterFx(k, a,  b);
-						controlePonto.desenharPonto(gc, k, fx, retaGr.getEspessuraReta(), "",retaGr.getCorReta());
+						controlePonto.desenharPonto(gc, k, fx, definicao.getEspessura(), "",definicao.getCor());
 					}
 				}else{
 				//Quando x1 < x2				
 					for(k=x1; k<=x2; k++){
 						fx = (int) retaMat.obterFx(k, a,  b);
-						controlePonto.desenharPonto(gc, k, fx, retaGr.getEspessuraReta(), "", retaGr.getCorReta());
+						controlePonto.desenharPonto(gc, k, fx, definicao.getEspessura(), "", definicao.getCor());
 					}
 				}
 			}
@@ -88,45 +97,57 @@ public class ControleReta {
 	}
 	
 	public void clicarReta(Canvas canvas, GraphicsContext gc) {
-		canvas.setOnMousePressed(event -> {
-			int x, y;
-			if (event.getButton() == MouseButton.PRIMARY) {
-				x = (int)event.getX();
-				y = (int)event.getY();
-				// desenha ponto na posicao clicada
-				controlePonto.desenharPonto(gc, x, y,retaGr.getEspessuraReta(), "P"+ getIndicePonto(),retaGr.getCorReta());
-				indicePonto++;
-				verificarClickReta(x, y, gc);
-				
-				//verificar o primeiro clique para pegar as coordenadas do ponto
-			} else if (event.getButton() == MouseButton.SECONDARY) {
-				x = (int)event.getX();
-				y = (int)event.getY();
-				// desenha ponto na posicao clicada
-				controlePonto.desenharPonto(gc, x, y, retaGr.getEspessuraReta(), "("+ x + ", " + y +")", retaGr.getCorReta());
-				indicePonto++;
-				verificarClickReta(x, y, gc);
-			}
+		clicar(canvas, gc);
+		soltarClique(canvas,  gc);
+		arrastarClique(canvas, gc);
+	}
+ 	
+ 	public void clicar(Canvas canvas, GraphicsContext gc) {
+ 		canvas.setOnMousePressed(event -> {
+ 			if (event.getButton() == MouseButton.PRIMARY) {
+ 				if (primeiraVez == true) {
+ 					x1 = (int)event.getX();
+ 					y1 = (int)event.getY();
+ 					controlePonto.desenharPonto(gc, x1, y1, definicao.getEspessura(), "", definicao.getCor());
+ 					primeiraVez = false;
+ 				} 
+ 			}
 		});
 	}
 	
- 	public void verificarClickReta(int x, int y, GraphicsContext gc){
-		if(contClique == 0){
-			contClique++;
-			retaGr.setX1(x);
-			retaGr.setY1(y);
-		}else if(contClique == 1){
-			contClique = 0;
-			retaGr.setX2(x);
-			retaGr.setY2(y);
-			desenharReta(gc, retaGr.getX1(), retaGr.getY1(), retaGr.getX2(), retaGr.getY2());
-			retaGr.setPontos();
-		}
+ 	public void arrastarClique(Canvas canvas, GraphicsContext gc) {
+		canvas.setOnMouseDragged(event -> {
+			if (event.getButton() == MouseButton.PRIMARY) {
+				if (fimElastico == false) {
+					xant = x;
+					yant = y;
+					// "apaga" reta anterior
+					definicao.setCor(Color.WHITE);
+					definicao.setEspessura(5);
+					desenharReta(gc, x1, y1, xant, yant);
+					definicao.setEspessura(3);
+					
+				}
+				x = (int)event.getX();
+				y = (int)event.getY();
+				definicao.setCor(Color.BLACK);
+				desenharReta(gc, x1, y1, x, y);
+				fimElastico = false;
+			}	
+		});
 	}
- 	
- 	public void setContClique(int n){
- 		this.contClique = n;
- 	}
+	
+ 	public void soltarClique(Canvas canvas, GraphicsContext gc) {
+		canvas.setOnMouseReleased(event -> {
+			if (event.getButton() == MouseButton.PRIMARY) {
+				if (fimElastico == false) {
+					desenharReta(gc, x1, y1, x, y);
+					fimElastico = true;
+					primeiraVez = true;
+				}
+			}
+		});
+	}
  	
  	public void setIndicePonto(int n){
  		this.indicePonto = n;
@@ -134,5 +155,5 @@ public class ControleReta {
  	
 	public int getIndicePonto(){
  		return this.indicePonto;
- 	}	
+ 	}
 }

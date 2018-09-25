@@ -15,7 +15,6 @@ public class Ponto extends Point2D{
 		super(p.getx(), p.gety());
 	}
 
-
 	public double getx() {
 		return getX();
 	}

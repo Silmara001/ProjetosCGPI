@@ -1,7 +1,8 @@
 package matematica;
 
-public class Reta {
-
+public class Reta{
+	double x1, y1, x2, y2;
+	
 	public double obterFx(double x, double a, double b){
 		double y = a*x + b;
 		return y;

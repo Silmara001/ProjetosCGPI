@@ -3,19 +3,21 @@ package controle;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+
 import javafx.stage.Stage;
 import controle.ControlePonto;
 import controle.ControleReta;
+import grafica.Definicao;
 import controle.ControleCirculo;
-import grafica.RetaGr;
 
 public class ControleTela {
 	GraphicsContext gc;
 	
+	Definicao definicao = new Definicao();
 	ControlePonto controlePonto = new ControlePonto();
-	ControleReta controleReta = new ControleReta();
-	ControleCirculo controleCirculo = new ControleCirculo();
-	RetaGr retaGr = new RetaGr();
+	ControleReta controleReta = new ControleReta(definicao);
+	ControleCirculo controleCirculo = new ControleCirculo(definicao);
+	ControleRetangulo controleRetangulo = new ControleRetangulo(definicao, controleReta);
 	
 	public void mostrarCoordenadasMouse(Canvas canvas, Stage palco) {
 		canvas.setOnMouseMoved(event -> {
@@ -26,7 +28,6 @@ public class ControleTela {
 	public Button limparTela(GraphicsContext gc, Button btnLimparTela) { //parametros: x, y, w, h
 		btnLimparTela.setOnMousePressed(e-> {
 			gc.clearRect(0, 0, 1200, 600);
-			resetar();
 		});
 		return btnLimparTela;
 	}
@@ -34,7 +35,6 @@ public class ControleTela {
 	public Button clicarPonto(Canvas canvas, GraphicsContext gc, Button btnPonto){
 		btnPonto.setOnMousePressed(e-> {
 			controlePonto.clicarPonto(canvas, gc);
-			resetar();
 		});
 		return btnPonto;
 	}
@@ -42,7 +42,6 @@ public class ControleTela {
 	public Button clicarReta(Canvas canvas, GraphicsContext gc, Button btnReta){
 		btnReta.setOnMousePressed(e-> {
 			controleReta.clicarReta(canvas, gc);
-			resetar();
 		});
 		return btnReta;
 	}
@@ -50,15 +49,18 @@ public class ControleTela {
 	public Button clicarCirculo(Canvas canvas, GraphicsContext gc, Button btnCirculo){
 		btnCirculo.setOnMousePressed(e-> {
 			controleCirculo.clicarCirculo(canvas, gc);
-			resetar();
 		});
 		return btnCirculo;
 	}
 	
-	public void resetar() {
-		controlePonto.setIndicePonto(1);
-		controleReta.setIndicePonto(1);
-		controleCirculo.setContClique(0);
-		controleReta.setContClique(0);
+	public Button clicarRetangulo(Canvas canvas, GraphicsContext gc, Button btnRetangulo){
+		btnRetangulo.setOnMousePressed(e-> {
+			controleRetangulo.clicarRetangulo(canvas, gc);
+		});
+		return btnRetangulo;
+	}
+	
+	public Definicao getDefinicao(){
+		return this.definicao;
 	}
 }
