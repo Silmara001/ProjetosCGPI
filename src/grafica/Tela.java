@@ -22,6 +22,7 @@ public class Tela {
 	Button btnCirculo = new Button(" O ");
 	Button btnRetangulo = new Button(" [] ");
 	Button btnLimparTela = new Button("Limpa Tela");
+	Button btnSelecionarItem = new Button(" Selecionar Forma ");
 	HBox hBoxBotoes = new HBox();
 	
 	ControleTela controleTela = new ControleTela();
@@ -50,7 +51,7 @@ public class Tela {
 		
 		pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		pane.setCenter(canvas); // posiciona o componente de desenho
-		pane.setTop(adicionaBotoes(btnPonto, btnReta , btnCirculo, btnRetangulo, btnLimparTela));
+		pane.setTop(adicionaBotoes(btnPonto, btnReta , btnCirculo, btnRetangulo, btnLimparTela, btnSelecionarItem));
 		
 		// cria e insere cena
 		Scene scene = new Scene(pane);
@@ -66,15 +67,16 @@ public class Tela {
 		return this.gc;
 	}
 	
-	public HBox adicionaBotoes(Button btnPonto, Button btnReta , Button btnCirculo, Button btnRetangulo, Button btnLimparTela){
+	public HBox adicionaBotoes(Button btnPonto, Button btnReta , Button btnCirculo, Button btnRetangulo, Button btnLimparTela, Button btnSelecionarItem){
 		HBox hBoxBotoes = new HBox();
 		btnPonto = controleTela.clicarPonto(canvas,gc, btnPonto);
 		btnReta = controleTela.clicarReta(canvas,gc, btnReta);
 		btnCirculo = controleTela.clicarCirculo(canvas,gc, btnCirculo);
 		btnRetangulo =  controleTela.clicarRetangulo(canvas, gc, btnRetangulo);
 		btnLimparTela = controleTela.limparTela(gc, btnLimparTela );
+		btnSelecionarItem = controleTela.selecionarForma(canvas, gc, btnSelecionarItem );
 		
-		hBoxBotoes.getChildren().addAll(btnPonto, btnReta, btnCirculo, btnRetangulo, btnLimparTela);
+		hBoxBotoes.getChildren().addAll(btnPonto, btnReta, btnCirculo, btnRetangulo, btnLimparTela, btnSelecionarItem );
 		return hBoxBotoes;
 	}
 }

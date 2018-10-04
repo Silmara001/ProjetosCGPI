@@ -9,7 +9,7 @@ import matematica.Circulo;
 //import grafica.CirculoGr;
 import grafica.Definicao; 
 
-public class ControleCirculo {
+public class ControleCirculo extends Forma{
 	public ControleCirculo(Definicao definicao){
 		this.definicao = definicao;
 	}

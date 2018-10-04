@@ -8,7 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 
-public class ControleReta {
+public class ControleReta extends Forma{
 	int indicePonto = 1;
 	int x1=0, y1=0, x2=0, y2=0;
 	int x=0, y=0, xant=0, yant=0;
@@ -19,6 +19,7 @@ public class ControleReta {
 	Reta retaMat = new Reta();
 	ControlePonto controlePonto = new ControlePonto();
 	Definicao definicao;
+	private OnDrawForm _listener;
 	
 	public ControleReta(Definicao definicao){
 		this.definicao = definicao;
@@ -28,7 +29,7 @@ public class ControleReta {
 		int  fx, fy, k;
 		double a, b;
 		
-		//caso 1: quando x de p1 e p2 são iguais
+		//caso 1: quando x de p1 e p2 sï¿½o iguais
 		if((x1 == x2) && (y1 != y2)){ 
 			//Quando y1 > y2
 			if( retaMat.verificarY1MaiorY2(y1, y2) ){
@@ -43,7 +44,7 @@ public class ControleReta {
 			}
 		}
 			
-		//caso 2: quando y de p1 e p2 são iguais
+		//caso 2: quando y de p1 e p2 sï¿½o iguais
 		if((y1 == y2) && (x1 != x2)){ 
 			//Quando x1 > x2
 			if( retaMat.verificarX1MaiorX2(x1, x2) ){
@@ -58,11 +59,11 @@ public class ControleReta {
 			}
 		}
 		
-		//caso 3: quando y e x de p1 e p2 são divergentes
+		//caso 3: quando y e x de p1 e p2 sï¿½o divergentes
 		if((y1 != y2) && (x1 != x2)){
 			a = retaMat.obterCoeficienteAngular(x1,y1, x2, y2);
 			b = retaMat.obterCoeficienteLinear(x1, y1, a);
-			//Quando intervalo de y é menor do que o do x, é preciso usar a função da reta em função de y
+			//Quando intervalo de y ï¿½ menor do que o do x, ï¿½ preciso usar a funï¿½ï¿½o da reta em funï¿½ï¿½o de y
 			if ( retaMat.obterDistancia(x1, x2)  <  retaMat.obterDistancia(y1, y2) ) {
 				//Quando x1 > x2
 				if( retaMat.verificarY1MaiorY2(y1, y2) ){ 
@@ -96,10 +97,12 @@ public class ControleReta {
 		
 	}
 	
-	public void clicarReta(Canvas canvas, GraphicsContext gc) {
+	public Forma clicarReta(Canvas canvas, GraphicsContext gc, OnDrawForm mListener) {
+		this._listener = mListener;
 		clicar(canvas, gc);
 		soltarClique(canvas,  gc);
 		arrastarClique(canvas, gc);
+		return this;
 	}
  	
  	public void clicar(Canvas canvas, GraphicsContext gc) {

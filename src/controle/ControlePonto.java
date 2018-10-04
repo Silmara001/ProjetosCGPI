@@ -6,7 +6,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import grafica.PontoGr;
 
-public class ControlePonto {
+public class ControlePonto extends Forma {
 	int indicePonto= 1;
 	
 	public void desenharPonto(GraphicsContext g, int x, int y, int diametro, String nome, Color cor) {

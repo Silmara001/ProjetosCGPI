@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 
-public class ControleRetangulo {
+public class ControleRetangulo extends Forma{
 	int x1=0, y1=0, x2=0, y2=0;
 	int x=0, y=0, xant=0, yant=0;
 	
@@ -15,6 +15,7 @@ public class ControleRetangulo {
 	
 	Definicao definicao;
 	ControleReta controleReta;
+	private OnDrawForm _listener;
 	
 	public ControleRetangulo(Definicao definicao, ControleReta controleReta){
 		this.definicao = definicao;
@@ -30,9 +31,12 @@ public class ControleRetangulo {
 		controleReta.desenharReta(gc, (int)x1, (int)y2, (int)x2, (int)y2);
 		//reta: pt(x2, y1) e pt(x2, y2)
 		controleReta.desenharReta(gc, (int)x2, (int)y1, (int)x2, (int)y2);
+		
+		_listener.formaDesenhada(this);
 	}
 	
-	public void clicarRetangulo(Canvas canvas, GraphicsContext gc) {
+	public void clicarRetangulo(Canvas canvas, GraphicsContext gc, OnDrawForm mListener) {
+		this._listener = mListener;
 		clicar(canvas, gc);
 		soltarClique(canvas,  gc);
 		arrastarClique(canvas, gc);
