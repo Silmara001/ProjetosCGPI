@@ -1,11 +1,12 @@
 package matematica;
 
+import javafx.scene.shape.Line;
+
 /**
  * Classe auxiliar para armazenar a equação da reta
- * @author alinemurakami
  *
  */
-public class Reta {
+public class Reta extends Line {
 
 	private double a;
 	private double b;

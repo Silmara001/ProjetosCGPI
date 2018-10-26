@@ -1,4 +1,5 @@
 package App;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -42,6 +43,7 @@ class AppGUI extends JFrame {
 	private JButton jbRotacionar = new JButton();
 	private JButton jbEscalar = new JButton();
 
+	private JButton jbClip = new JButton("Clip");
 
 	public AppGUI(int larg, int alt) {
 		/**
@@ -113,18 +115,20 @@ class AppGUI extends JFrame {
 		jbCarregarDesenho.setFont(new Font("Arial", Font.PLAIN, 15));
 		jbSalvarDesenho.setFont(new Font("Arial", Font.PLAIN, 15));
 		jbLimparTela.setFont(new Font("Arial", Font.PLAIN, 15));
+		jbClip.setFont(new Font("Arial", Font.PLAIN, 15));
 
 		barraComandos.add(jbCarregarDesenho);
 		barraComandos.add(jbSalvarDesenho);
 		barraComandos.add(jbLimparTela);
+		barraComandos.add(jbClip);
 		barraComandos.setFloatable(false);
 		jbRetas.setSize(300, 300);
 
 		add(barraComandos, BorderLayout.NORTH);
 		add(barraComandosPrimitivos, BorderLayout.WEST);
-		add(areaDesenho, BorderLayout.CENTER);                
+		add(areaDesenho, BorderLayout.CENTER);
 		add(msg, BorderLayout.SOUTH);
-		
+
 		Eventos eventos = new Eventos();
 		jbRetas.addActionListener(eventos);
 		jbCirculos.addActionListener(eventos);
@@ -135,44 +139,48 @@ class AppGUI extends JFrame {
 		jbSalvarDesenho.addActionListener(eventos);
 		jbCor.addActionListener(eventos);
 		jbLimparTela.addActionListener(eventos);
+		jbClip.addActionListener(eventos);
 		jbSelecionarForma.addActionListener(eventos);
 
 		jbApagar.addActionListener(eventos);
 		jbMover.addActionListener(eventos);
 		jbRotacionar.addActionListener(eventos);
 		jbEscalar.addActionListener(eventos);
-		
+
 	}
-	
-	private class Eventos implements ActionListener{
+
+	private class Eventos implements ActionListener {
 
 		public void actionPerformed(ActionEvent event) {
 
 			buttonStatus(false);
 
-			if (event.getSource() == jbRetas){
+			if (event.getSource() == jbRetas) {
 				areaDesenho.setTipo(ModosDeTrabalho.RETAS);
-			} else if (event.getSource() == jbCirculos){
+			} else if (event.getSource() == jbCirculos) {
 				areaDesenho.setTipo(ModosDeTrabalho.CIRCULOS);
-			} else if (event.getSource() == jbRetangulos){
+			} else if (event.getSource() == jbRetangulos) {
 				areaDesenho.setTipo(ModosDeTrabalho.RETANGULOS);
-			} else if (event.getSource() == jbLinhaPoligonal){
+			} else if (event.getSource() == jbLinhaPoligonal) {
 				areaDesenho.setTipo(ModosDeTrabalho.LINHA_POLIGONAL);
-			} else if (event.getSource() == jbPoligono){
+			} else if (event.getSource() == jbPoligono) {
 				areaDesenho.setTipo(ModosDeTrabalho.POLIGONO);
-			} else if(event.getSource() == jbCarregarDesenho) {
+			} else if (event.getSource() == jbCarregarDesenho) {
 				loadFile();
-			} else if(event.getSource() == jbSalvarDesenho) {
+			} else if (event.getSource() == jbSalvarDesenho) {
 				saveFile();
-			} else if(event.getSource() == jbCor) {
+			} else if (event.getSource() == jbCor) {
 				changeColor();
-			} else if(event.getSource() == jbLimparTela) {
+			} else if (event.getSource() == jbLimparTela) {
 				limparTela();
-			} else if(event.getSource() == jbSelecionarForma) {
+			} else if (event.getSource() == jbSelecionarForma) {
 				selecionarForma();
-			} else if(event.getSource() == jbApagar) {
+			} else if (event.getSource() == jbApagar) {
 				apagarForma();
-			} 
+
+			} else if (event.getSource() == jbClip) {
+				clipScreen();
+			}
 //			else if(event.getSource() == jbMover) {
 //				transladarForma();
 //			} else if(event.getSource() == jbRotacionar) {
@@ -181,9 +189,13 @@ class AppGUI extends JFrame {
 //			else if(event.getSource() == jbEscalar) {
 //				escalarForma();
 //			}
-			
-			System.out.println("Botão clicado: " + ( (JButton) event.getSource()).getText());
-			
+
+			System.out.println("Botão clicado: " + ((JButton) event.getSource()).getText());
+
+		}
+
+		private void clipScreen() {
+			areaDesenho.setTipo(ModosDeTrabalho.CLIPP);
 		}
 	}
 
@@ -238,12 +250,12 @@ class AppGUI extends JFrame {
 	private void selecionarForma() {
 		areaDesenho.setTipo(ModosDeTrabalho.SELECIONAR);
 	}
-	
+
 	private void limparTela() {
 		areaDesenho.setFormas(new ArrayList<>());
 		areaDesenho.repaint();
 	}
-	
+
 	private void changeColor() {
 		Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.BLACK);
 		areaDesenho.setCor(newColor);
@@ -256,49 +268,48 @@ class AppGUI extends JFrame {
 		jbEscalar.setEnabled(status);
 	}
 
-	
 	private void loadFile() {
-		
+
 		JFileChooser openFile = new JFileChooser();
-		openFile.setFileFilter(new FileNameExtensionFilter("xml file","xml"));
-        openFile.showOpenDialog(null);
-        
+		openFile.setFileFilter(new FileNameExtensionFilter("xml file", "xml"));
+		openFile.showOpenDialog(null);
+
 		FileReader fr = new FileReader();
 		File f = openFile.getSelectedFile();
-		
-		if(f != null) {
+
+		if (f != null) {
 			boolean fullLoad = fr.readFile(f.getPath());
-			
-			if(fullLoad) {
+
+			if (fullLoad) {
 				System.out.println("Só imprimo depois de ler tudo");
 				areaDesenho.setFormas(fr.getFormas());
 				areaDesenho.repaint();
-				
+
 			} else {
 				System.out.println("Arquivo não pode ser lido");
 			}
 		}
 	}
-	
+
 	private void saveFile() {
-		
+
 		JFileChooser result = new JFileChooser();
-		result.setFileFilter(new FileNameExtensionFilter("xml file","xml"));
+		result.setFileFilter(new FileNameExtensionFilter("xml file", "xml"));
 		result.showSaveDialog(null);
-            
-        File targetFile = result.getSelectedFile();
-        if(targetFile != null) {
-		    if (! Conversor.fileExt(targetFile.getName()).equalsIgnoreCase("xml")) {
-		    		targetFile = new File(targetFile.toString() + ".xml");
-		    }
-		    
-		    try {
+
+		File targetFile = result.getSelectedFile();
+		if (targetFile != null) {
+			if (!Conversor.fileExt(targetFile.getName()).equalsIgnoreCase("xml")) {
+				targetFile = new File(targetFile.toString() + ".xml");
+			}
+
+			try {
 				targetFile.createNewFile();
 				FileWriter.write(targetFile, areaDesenho.getFormas());
 			} catch (IOException e) {
 				e.printStackTrace();
-			}    
-        }
+			}
+		}
 	}
-	
+
 }

@@ -65,9 +65,6 @@ public class ControleRetangulo extends Forma {
         this.vertice2 = vertice2;
     }
 
-
-   
-
     private ArrayList<ControleReta> calcularRetas() {
         ArrayList<ControleReta> controleRetas = new ArrayList<>();
 

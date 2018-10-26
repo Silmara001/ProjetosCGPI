@@ -24,6 +24,8 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
 	List<Forma> formas = new ArrayList<>();
 	Color currentColor = Color.BLACK;
 	ControleLinha lp = null;
+	
+	ClippingAlgoritmo clippingArea;
 
 	Forma formaSelecionada;
 	Color corFormaSelecinada;
@@ -147,6 +149,9 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             formas.add(new Circulo(p1, p2.calcularDistancia(p1), currentColor));
 		} else if (tipo == ModosDeTrabalho.RETANGULOS && p1 != null && p2 != null) {
             formas.add(new ControleRetangulo(p1, p2, currentColor));
+		}else if (tipo == ModosDeTrabalho.CLIPP && p1 != null && p2 != null){
+			clipArea(new ControleRetangulo(p1, p2, currentColor));
+			
 		}
 		
 		if(tipo != ModosDeTrabalho.LINHA_POLIGONAL && tipo != ModosDeTrabalho.POLIGONO) {
@@ -174,7 +179,6 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
 
 	public void mouseDragged(MouseEvent e) {
 		if(tipo != ModosDeTrabalho.LINHA_POLIGONAL && tipo != ModosDeTrabalho.POLIGONO) {
-			System.out.println("mouse");
 			oldP2 = p2;
 			p2 = new Ponto(e.getX(), e.getY());
 			repaint();
@@ -254,7 +258,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
 			r.desenhar(g);
 		}
 		
-		if ((tipo == ModosDeTrabalho.RETANGULOS) && (p1 != null) && (p2 != null)) {
+		if ((tipo == ModosDeTrabalho.RETANGULOS ||tipo == ModosDeTrabalho.CLIPP ) && (p1 != null) && (p2 != null)) {
 			ControleRetangulo r = new ControleRetangulo(p1, p2, currentColor);
 
 			ControleRetangulo rOld = null;
@@ -268,10 +272,27 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		
 		}
 		
 		repaintAll(g);
+	}
 
+	private void clipArea(ControleRetangulo r) {
+
+		ClippingAlgoritmo clipArea = new ClippingAlgoritmo(r);
+		setClippingArea(clipArea);
+		
+		int width = (int)( r.getVertice2().getX() - r.getVertice1().getX());
+		int height=(int)( r.getVertice2().getY() - r.getVertice1().getY());;
+		setSize(width, height);
+		
+	}
+
+	private void setClippingArea(ClippingAlgoritmo clipArea) {
+		this.clippingArea = clipArea;
+
+		
 	}
 
 	public void apagarFormaSelecionada() {

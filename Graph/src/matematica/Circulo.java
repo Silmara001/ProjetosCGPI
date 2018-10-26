@@ -4,6 +4,7 @@ package matematica;
 import java.awt.*;
 
 import formas.Forma;
+import javafx.scene.shape.Circle;
 import formas.ControlePonto;
 
 public class Circulo extends Forma {
@@ -14,12 +15,12 @@ public class Circulo extends Forma {
    Circulo(int x, int y, double raio){
    	  setCentro(new Ponto(x, y));
    	  setRaio(raio);
-   	  this._cor = Color.BLACK;
+   	 
    }
    Circulo(Ponto c, double raio){
    	  setCentro(new Ponto(c));
    	  setRaio(raio);
-       this._cor = Color.BLACK;
+      
    }
 
     public Circulo(int x, int y, double raio, Color cor){
