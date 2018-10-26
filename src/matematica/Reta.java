@@ -1,57 +1,43 @@
 package matematica;
 
-public class Reta{
-	double x1, y1, x2, y2;
+import javafx.scene.shape.Line;
+
+/**
+ * Classe auxiliar para armazenar a equação da reta
+ *
+ */
+public class Reta extends Line {
+
+	private double a;
+	private double b;
+	private double c;
 	
-	public double obterFx(double x, double a, double b){
-		double y = a*x + b;
-		return y;
+	
+	public Reta(Ponto p1, Ponto p2) {
+		double m = (p2.getY() - p1.getY())/(p2.getX() - p1.getX());
+		this.a = -1 * m;
+		this.c = -1 * p1.getY() - m *(-1* p1.getX());
+		this.b = 1;
 	}
 	
-	public double obterFy(double y, double a, double b){
-		double x = (y - b)/a;
-		return x;
+	public double getC() {
+		return c;
 	}
-	
-	public double obterCoeficienteAngular(double x1, double y1, double x2, double y2 ){
-		double a = 1; 
-		double y = (y2 - y1);
-		double x = (x2 - x1);
-		if(x != 0){
-			a = y/x;
-		}
+	public void setC(double c) {
+		this.c = c;
+	}
+	public double getA() {
 		return a;
 	}
-	
-	public double obterCoeficienteLinear(double x1, double y1, double a){
-		double b = y1 - (a * x1);
+	public void setA(double a) {
+		this.a = a;
+	}
+	public double getB() {
 		return b;
 	}
-	
-	public boolean verificarX1MaiorX2(int x1, int x2){
-		boolean verifica = false;
-		if (x1 > x2){
-			verifica = true;
-		}
-		return verifica;
-	}
-
-	public boolean verificarY1MaiorY2(int y1, int y2){
-		boolean verifica = false;
-		if (y1 > y2){
-			verifica = true;
-		}
-		return verifica;
+	public void setB(double b) {
+		this.b = b;
 	}
 	
-	public int obterDistancia(int x1, int x2){
-		int i = 0;
-		
-		if(x2 > x1){
-			i = x2 - x1;
-		}else if( x1 > x2){
-			i = x1 - x2;
-		}
-		return i;
-	}	 
+	
 }
