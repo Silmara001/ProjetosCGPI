@@ -20,9 +20,9 @@ public abstract class Forma {
     }
     
     //TODO métodos comuns à todas as formas serão definidos nesta classe:
-
-//  public abstract void rotacionar(Ponto p, double angle);
-//  public abstract void escalar(double fatorEscala);
-//  public abstract void transladar(int distX, int distY);
+  public abstract void rotacionar(Ponto referencia, double angle);
+  public abstract void escalar(Ponto referencia, double fatorEscala);
+  public abstract void transladar(Ponto referencia);
+ 
 
 }

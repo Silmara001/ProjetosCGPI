@@ -108,28 +108,45 @@ public class ControleRetangulo extends Forma {
 		
 	}
 */
-//    @Override
-//    public void rotacionar(Ponto p, double angulo) {
-//        this.vertice1.rotacionar(p, angulo);
-//        this.vertice2.rotacionar(p, angulo);
-//        this.vertice3.rotacionar(p, angulo);
-//        this.vertice4.rotacionar(p, angulo);
-//    }
-//
-//    @Override
-//    public void escalar(double fatorEscala) {
-//        this.vertice1.escalar(fatorEscala);
-//        this.vertice2.escalar(fatorEscala);
-//        this.vertice3.escalar(fatorEscala);
-//        this.vertice4.escalar(fatorEscala);
-//    }
-//
-//    @Override
-//    public void transladar(int distanciaX, int distanciaY) {
-//        this.vertice1.transladar(distanciaX, distanciaY);
-//        this.vertice2.transladar(distanciaX, distanciaY);
-//        this.vertice3.transladar(distanciaX, distanciaY);
-//        this.vertice4.transladar(distanciaX, distanciaY);
-//
-//    }
+    @Override
+    public void rotacionar(Ponto referencia, double angulo) {
+    	double xcenter = vertice2.getX() - ((vertice2.getX() - vertice1.getX())/2);
+    	double ycenter =vertice2.getY() - ((vertice2.getY() - vertice1.getY())/2);
+    	
+    	Ponto centro = new Ponto(xcenter, ycenter);
+    	
+        this.vertice1.rotacionar(centro, angulo);
+        this.vertice2.rotacionar(centro, angulo);
+        this.vertice3.rotacionar(centro, angulo);
+        this.vertice4.rotacionar(centro, angulo);
+        
+    }
+
+    @Override
+    public void escalar(Ponto referencia, double fatorEscala) {
+        this.vertice1.escalar(referencia, fatorEscala);
+        this.vertice2.escalar(referencia, fatorEscala);
+        this.vertice3.escalar(referencia, fatorEscala);
+        this.vertice4.escalar(referencia, fatorEscala);
+    }
+
+    @Override
+    public void transladar(Ponto p) {
+//    	x’=x+tx, y’= y+ty
+    			double fatorX = p.getX();
+    			double fatorY = p.getY();
+    			;
+    			//vetor de transação
+    		Ponto t = new Ponto((fatorX) - vertice1.getX(),
+    				(fatorY) - vertice1.getY());
+    	
+        this.vertice1.transladar(t);
+        this.vertice2.transladar(t);
+        this.vertice3.transladar(t);
+        this.vertice4.transladar(t);
+        
+    }
+
+
+	
 }

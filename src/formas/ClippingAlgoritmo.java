@@ -1,12 +1,12 @@
 package formas;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.shape.Line;
-import matematica.Reta;
+import matematica.Ponto;
 
-import com.sun.javafx.geom.Line2D;
+import java.util.ArrayList;
+import java.util.List;
 
-import javafx.*;
+
 
 /**
  * Classe baseada no algoritmo Cohen-Sutherland
@@ -66,7 +66,24 @@ public class ClippingAlgoritmo {
 			code |= BOTTOM;
 		else if (y > yMax)
 			code |= TOP;
+
+
 		return code;
+	}
+
+	private boolean isCompletelyOutside(int c1, int c2) {
+		boolean isOutside = false;
+		if(c1 != INSIDE && c2 != INSIDE && 
+				c1 != LEFT && c2 != LEFT &&
+				c1 != RIGHT && c2 != RIGHT &&
+				c1 != BOTTOM && c2 != BOTTOM &&
+				c1 != TOP && c2 != TOP 
+				) {
+			isOutside = true;			
+		}
+
+		return isOutside;
+
 	}
 
 	/**
@@ -77,14 +94,15 @@ public class ClippingAlgoritmo {
 	 * @return true if line is clipped, false if line is totally outside the clip
 	 *         rect.
 	 */
-	public boolean clip(Line2D line) {
+	public boolean clipLinha(ControleLinha line) {
 
-		double p1x = line.x1;
-		double p1y = line.y1;
-		double p2x = line.x2;
-		double p2y = line.y2;
+		List<Ponto> pontos = line.getPontos();
 
-		
+		double p1x = pontos.get(0).getX();
+		double p1y = pontos.get(0).getY();
+		double p2x =pontos.get(1).getX();
+		double p2y =pontos.get(1).getY();
+
 		boolean vertical = p1x == p2x;
 
 		double qx = 0d;
@@ -95,39 +113,205 @@ public class ClippingAlgoritmo {
 		int c1 = regionCode(p1x, p1y);
 		int c2 = regionCode(p2x, p2y);
 
-		while (c1 != INSIDE || c2 != INSIDE) {
+		if(isCompletelyOutside(c1,c2) ) {
+			line = null;
+		}else {
 
-			if ((c1 & c2) != INSIDE)
-				return false;
+			while (c1 != INSIDE || c2 != INSIDE) {
 
-			int c = c1 == INSIDE ? c2 : c1;
+				if ((c1 & c2) != INSIDE)
+					return false;
 
-			if ((c & LEFT) != INSIDE) {
-				qx = xMin;
-				qy = (qx - p1x) * slope + p1y;
-			} else if ((c & RIGHT) != INSIDE) {
-				qx = xMax;
-				qy = (qx - p1x) * slope + p1y;
-			} else if ((c & BOTTOM) != INSIDE) {
-				qy = yMin;
-				qx = vertical ? p1x : (qy - p1y) / slope + p1x;
-			} else if ((c & TOP) != INSIDE) {
-				qy = yMax;
-				qx = vertical ? p1x : (qy - p1y) / slope + p1x;
+				int c = c1 == INSIDE ? c2 : c1;
+
+				if ((c & LEFT) != INSIDE) {
+					qx = xMin;
+					qy = (qx - p1x) * slope + p1y;
+				} else if ((c & RIGHT) != INSIDE) {
+					qx = xMax;
+					qy = (qx - p1x) * slope + p1y;
+				} else if ((c & BOTTOM) != INSIDE) {
+					qy = yMin;
+					qx = vertical ? p1x : (qy - p1y) / slope + p1x;
+				} else if ((c & TOP) != INSIDE) {
+					qy = yMax;
+					qx = vertical ? p1x : (qy - p1y) / slope + p1x;
+				}
+
+				if (c == c1) {
+					p1x = qx;
+					p1y = qy;
+					c1 = regionCode(p1x, p1y);
+				} else {
+					p2x = qx;
+					p2y = qy;
+					c2 = regionCode(p2x, p2y);
+				}
 			}
 
-			if (c == c1) {
-				p1x = qx;
-				p1y = qy;
-				c1 = regionCode(p1x, p1y);
-			} else {
-				p2x = qx;
-				p2y = qy;
-				c2 = regionCode(p2x, p2y);
-			}
+			List<Ponto> novosPontos = new ArrayList();
+			novosPontos.add(new Ponto(p1x, p1y));
+			novosPontos.add(new Ponto(p2x, p2y));
+
+			line.setPontos(novosPontos);;
 		}
-		line.setLine((float)p1x, (float)p1y, (float)p2x,(float) p2y);
 		return true;
 	}
+
+
+	public boolean clipReta(ControleReta line) {
+
+		double p1x = line.p1.getX();
+		double p1y = line.p1.getY();
+		double p2x =line.p2.getX();
+		double p2y =line.p2.getY();
+
+		boolean vertical = p1x == p2x;
+
+		double qx = 0d;
+		double qy = 0d;
+
+		double slope = vertical ? 0d : (p2y - p1y) / (p2x - p1x);
+
+		int c1 = regionCode(p1x, p1y);
+		int c2 = regionCode(p2x, p2y);
+
+		if(isCompletelyOutside(c1,c2) ) {
+			return false;
+		}
+		else {
+
+			while (c1 != INSIDE || c2 != INSIDE) {
+
+				if ((c1 & c2) != INSIDE)
+					return false;
+
+				int c = c1 == INSIDE ? c2 : c1;
+
+				if ((c & LEFT) != INSIDE) {
+					qx = xMin;
+					qy = (qx - p1x) * slope + p1y;
+				} else if ((c & RIGHT) != INSIDE) {
+					qx = xMax;
+					qy = (qx - p1x) * slope + p1y;
+				} else if ((c & BOTTOM) != INSIDE) {
+					qy = yMin;
+					qx = vertical ? p1x : (qy - p1y) / slope + p1x;
+				} else if ((c & TOP) != INSIDE) {
+					qy = yMax;
+					qx = vertical ? p1x : (qy - p1y) / slope + p1x;
+				}
+
+				if (c == c1) {
+					p1x = qx;
+					p1y = qy;
+					c1 = regionCode(p1x, p1y);
+				} else {
+					p2x = qx;
+					p2y = qy;
+					c2 = regionCode(p2x, p2y);
+				}
+			}
+
+
+			line.setP1(new Ponto(p1x, p1y));
+			line.setP2(new Ponto(p2x, p2y));
+
+		}
+		return true;
+	}
+
+	public boolean clipForma(Forma forma) {
+		if(forma.getClass().equals(ControleReta.class)) {	
+			ControleReta reta = (ControleReta) forma;
+			if(!clipReta(reta)) {
+				return false;
+			};	
+		}
+
+		if(forma.getClass().equals(ControleLinha.class)) {
+			ControleLinha poligono = (ControleLinha) forma;
+
+			boolean shouldDeleteForm = true;
+
+			for (ControleReta reta : poligono.calcularRetas()) {
+				boolean wasClipped = clipReta(poligono, reta);
+				shouldDeleteForm = shouldDeleteForm && !wasClipped;
+				
+			}
+			if(shouldDeleteForm) {
+				return false;
+			}
+		}
+
+		
+		return true;
+	}
+
+	private boolean clipReta(ControleLinha poligono, ControleReta line) {
+		
+		double p1x = line.p1.getX();
+		double p1y = line.p1.getY();
+		double p2x =line.p2.getX();
+		double p2y =line.p2.getY();
+		
+		Ponto ponto1 = line.p1;
+		Ponto ponto2 = line.p2;
+
+		boolean vertical = p1x == p2x;
+
+		double qx = 0d;
+		double qy = 0d;
+
+		double slope = vertical ? 0d : (p2y - p1y) / (p2x - p1x);
+
+		int c1 = regionCode(p1x, p1y);
+		int c2 = regionCode(p2x, p2y);
+
+		if(isCompletelyOutside(c1,c2) ) {
+			return false;
+		}
+		else {
+
+			while (c1 != INSIDE || c2 != INSIDE) {
+
+				if ((c1 & c2) != INSIDE)
+					return false;
+
+				int c = c1 == INSIDE ? c2 : c1;
+
+				if ((c & LEFT) != INSIDE) {
+					qx = xMin;
+					qy = (qx - p1x) * slope + p1y;
+				} else if ((c & RIGHT) != INSIDE) {
+					qx = xMax;
+					qy = (qx - p1x) * slope + p1y;
+				} else if ((c & BOTTOM) != INSIDE) {
+					qy = yMin;
+					qx = vertical ? p1x : (qy - p1y) / slope + p1x;
+				} else if ((c & TOP) != INSIDE) {
+					qy = yMax;
+					qx = vertical ? p1x : (qy - p1y) / slope + p1x;
+				}
+
+				if (c == c1) {
+					p1x = qx;
+					p1y = qy;
+					c1 = regionCode(p1x, p1y);
+				} else {
+					p2x = qx;
+					p2y = qy;
+					c2 = regionCode(p2x, p2y);
+				}
+			}
+	
+			line.setP1(new Ponto(p1x, p1y));
+			line.setP2(new Ponto(p2x, p2y));
+
+		}
+		return true;
+	}
+
+	
 
 }

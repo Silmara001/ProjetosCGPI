@@ -4,12 +4,12 @@ public class Conversor {
 
 	public static int relativeToPixel(String relative) {
 		//TODO - CONVERTER
-		return (int) (Float.parseFloat(relative) * 700);
+		return (int) (Float.parseFloat(relative) * 600); //modifiquei de 700 para 600
 	}
 	
 	public static String pixelToRelative(double pixel) {
 		//TODO - CONVERTER
-		return (pixel / 700) + "";
+		return (pixel / 600) + ""; //modifiquei de 700 para 600
 	}
 	
 	public static String fileExt(String fileName) {

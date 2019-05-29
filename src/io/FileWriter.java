@@ -126,9 +126,16 @@ public class FileWriter {
 		Element g = doc.createElement("G");
 		Element b = doc.createElement("B");
 		
+		/*
 		r.appendChild(doc.createTextNode(corForm.getRed()+""));
 		g.appendChild(doc.createTextNode(corForm.getGreen()+""));
 		b.appendChild(doc.createTextNode(corForm.getBlue()+""));
+		*/
+		
+		r.appendChild(doc.createTextNode("0"));
+		g.appendChild(doc.createTextNode("0"));
+		b.appendChild(doc.createTextNode("0"));
+		
 		
 		cor.appendChild(r);
 		cor.appendChild(g);

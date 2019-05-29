@@ -8,6 +8,7 @@ import javafx.scene.shape.Line;
  */
 public class Reta extends Line {
 
+	//bibi
 	private double a;
 	private double b;
 	private double c;

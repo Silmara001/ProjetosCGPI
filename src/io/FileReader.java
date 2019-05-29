@@ -37,10 +37,15 @@ public class FileReader{
 				System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 				
 				buildRetas(doc.getElementsByTagName("Reta"));
+				System.out.println("Passa BuildRetas");
 				buildRetangulos(doc.getElementsByTagName("Retangulo"));
+				System.out.println("Passa BuildRetangulos");
 				buildCirculos(doc.getElementsByTagName("Circulo"));
+				System.out.println("Passa BuildCirculos");
 				buildLinhasPoligonais(doc.getElementsByTagName("LinhaPoligonal"), false);
+				System.out.println("Passa BuildLinhaPoligonal");
                 buildLinhasPoligonais(doc.getElementsByTagName("Poligono"), true);
+                System.out.println("Passa BuildPoligonos");
 				
 		    } else {
 		    		//****JOptionPane.showMessageDialog(null, "Por favor, Selecione um XML");
@@ -78,9 +83,10 @@ public class FileReader{
 					pontos.add(new Ponto((double) Conversor.relativeToPixel(p1x), (double) Conversor.relativeToPixel(p1y)));
 					
 				}
-				
-				//Color cor;/*= new Color(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));*/
-				Color cor = Color.color(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
+				//int corRV = Integer.parseInt(corR), corGV =Integer.parseInt(corG), corBV =Integer.parseInt(corB);
+				Color cor = Color.rgb(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
+				//Color cor = Color.color(corRV, corGV, corBV);
+				//Color cor = Color.rgb(0,0,255,1.0);
                 formas.add(new ControleLinha(pontos, cor, fechado));
 			
 			}
@@ -165,7 +171,7 @@ public class FileReader{
 		int ponto2X = Conversor.relativeToPixel(p2x);
 		int ponto2Y = Conversor.relativeToPixel(p2y);
 		
-		Color cor = Color.color(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
+		Color cor = Color.rgb(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
         formas.add(new ControleReta(ponto1X, ponto1Y, ponto2X, ponto2Y, cor));
 	}
 	
@@ -176,7 +182,7 @@ public class FileReader{
 		int ponto2X = Conversor.relativeToPixel(p2x);
 		int ponto2Y = Conversor.relativeToPixel(p2y);
 		
-		Color cor = Color.color(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
+		Color cor = Color.rgb(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
         formas.add(new ControleRetangulo(ponto1X, ponto1Y, ponto2X, ponto2Y, cor));
 	}
 	
@@ -186,7 +192,7 @@ public class FileReader{
 		int ponto1Y = Conversor.relativeToPixel(p1y);
 		int raio = (int) Conversor.relativeToPixel(raioStr);
 		
-		Color cor = Color.color(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
+		Color cor = Color.rgb(Integer.parseInt(corR), Integer.parseInt(corG), Integer.parseInt(corB));
         formas.add(new Circulo(ponto1X, ponto1Y, raio, cor));
 	}
 }

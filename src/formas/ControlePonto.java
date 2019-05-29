@@ -63,4 +63,6 @@ public class ControlePonto extends Ponto {
        g.setFill(_corStr);
        g.strokeText(_str, (int)getX() + larg, (int)getY());
    }
+  
+
 }
